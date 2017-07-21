@@ -314,6 +314,7 @@
             android:value="@string/facebook_app_id" />
 
         <provider
+
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1920575401558694"
             android:exported="true" />

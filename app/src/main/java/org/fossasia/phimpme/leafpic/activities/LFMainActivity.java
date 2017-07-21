@@ -46,8 +46,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
@@ -70,7 +80,10 @@ import org.fossasia.phimpme.leafpic.util.SecurityHelper;
 import org.fossasia.phimpme.leafpic.util.StringUtils;
 import org.fossasia.phimpme.leafpic.views.GridSpacingItemDecoration;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
+import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,6 +130,7 @@ public class LFMainActivity extends SharedMediaActivity {
     private ArrayList<Media> media;
     private ArrayList<Media> selectedMedias = new ArrayList<>();
     public boolean visible;
+
 
     /*
     editMode-  When true, user can select items by clicking on them one by one
@@ -307,7 +321,42 @@ public class LFMainActivity extends SharedMediaActivity {
         new initAllPhotos().execute();
         displayData(getIntent().getExtras());
         checkNothing();
+        getKeysFromFirebase();
     }
+
+    private void getKeysFromFirebase() {
+        final FirebaseDatabase database;
+        database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("keys");
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String response = dataSnapshot.getValue().toString();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Constants.MY_IMGUR_CLIENT_ID = jsonObject.optString("imgur_client_id");
+                    Constants.TWITTER_CONSUMER_KEY = jsonObject.optString("twitter_CONSUMER_KEY");
+                    Constants.TWITTER_CONSUMER_SECRET = jsonObject.optString("twitter_CONSUMER_SECRET   ");
+                    Constants.FLICKR_API_KEY = jsonObject.optString("flickr_client_id");
+                    Constants.FLICKR_API_SECRET = jsonObject.optString("flickr_api_secret");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+    }
+
+
 
     @Override
     public void onResume() {

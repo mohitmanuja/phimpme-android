@@ -20,7 +20,7 @@ import org.fossasia.phimpme.utilities.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static org.fossasia.phimpme.utilities.Constants.IMGUR_LOGIN_URL;
+import static org.fossasia.phimpme.utilities.Constants.MY_IMGUR_CLIENT_ID;
 
 /**
  * Created by manuja on 16/7/17.
@@ -33,6 +33,7 @@ public class ImgurAuthActivity extends ThemedActivity {
     View parent;
     AlertDialog dialog;
     AlertDialog.Builder progressDialog;
+    public static final String IMGUR_LOGIN_URL = "https://api.imgur.com/oauth2/authorize?client_id="+MY_IMGUR_CLIENT_ID+"&response_type=token";
 
 
     public static void setBasicCallBack(BasicCallBack basicCallBack) {

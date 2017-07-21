@@ -39,7 +39,11 @@ import com.pinterest.android.pdk.PDKClient;
 import com.pinterest.android.pdk.PDKException;
 import com.pinterest.android.pdk.PDKResponse;
 import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -59,6 +63,7 @@ import org.fossasia.phimpme.sharetoflickr.FlickrActivity;
 import org.fossasia.phimpme.sharewordpress.WordpressLoginActivity;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.BasicCallBack;
+import org.fossasia.phimpme.utilities.Constants;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -115,8 +120,6 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
     private static final int NEXTCLOUD_REQUEST_CODE = 3;
     private static final int OWNCLOUD_REQUEST_CODE = 9;
     private static final int RESULT_OK = 1;
-    public static final int IMGUR_KEY_LOGGED_IN = 2;
-
     final static private String APP_KEY = "APP_KEY";
     final static private String APP_SECRET = "API_SECRET";
     private static final int RC_SIGN_IN = 9001;
@@ -126,6 +129,7 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeTwitterCOnfig();
         accountAdapter = new AccountAdapter(getAccentColor(), getPrimaryColor());
         accountPresenter = new AccountPresenter(realm);
         phimpmeProgressBarHandler = new PhimpmeProgressBarHandler(this);
@@ -230,6 +234,7 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
                     break;
 
                 case TWITTER:
+
                     signInTwitter();
                     accountPresenter.loadFromDatabase();
                     break;
@@ -311,6 +316,15 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
                             })
                     .show();
         }
+    }
+    void initializeTwitterCOnfig(){
+        if(Constants.TWITTER_CONSUMER_KEY == null && Constants.TWITTER_CONSUMER_KEY ==null) return;
+        TwitterConfig config = new TwitterConfig.Builder(this)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET))
+                .debug(true)
+                .build();
+        Twitter.initialize(config);
     }
 
     private void signInGooglePlus() {

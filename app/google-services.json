@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "694124204509",
-    "project_id": "firebase-phimpme"
+    "project_id": "firebase-phimpme",
+    "firebase_url": "https://fir-phimpme.firebaseio.com"
+
   },
   "client": [
     {
