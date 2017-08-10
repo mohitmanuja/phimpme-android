@@ -1,11 +1,13 @@
 package org.fossasia.phimpme.leafpic.fragments;
 
+import android.app.Application;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -15,7 +17,10 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.signature.StringSignature;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.fossasia.phimpme.MyApplication;
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.leafpic.activities.SingleMediaActivity;
 import org.fossasia.phimpme.leafpic.data.Media;
@@ -26,6 +31,8 @@ import java.util.Date;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by dnld on 18/02/16.
@@ -96,8 +103,19 @@ public class ImageFragment extends Fragment {
     }*/
 
     private void displayMedia(final PhotoView photoView, boolean useCache) {
-        //PreferenceUtil SP = PreferenceUtil.getInstance(getContext());
+        //PreferenceUtil SP = PreferenceUtil.getInstance(getContext
+        // ());
+        ImageView imageView = null;
+        ImageLoader imageLoader = ((MyApplication)getApplicationContext()).getImageLoader();
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.ic_launcher) //this is the image that will be displayed if download fails
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
 
+
+        imageLoader.displayImage(img.getUri(),photoView,options);
+/*
         Glide.with(getContext())
                 .load(img.getUri())
                 .asBitmap().format(DecodeFormat.PREFER_RGB_565)
@@ -111,7 +129,7 @@ public class ImageFragment extends Fragment {
                     public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                         photoView.setImageBitmap(bitmap);
                     }
-                });
+                });*/
 
     }
 
@@ -137,4 +155,7 @@ public class ImageFragment extends Fragment {
         }*/
         return false;
     }
+
+
+
 }
