@@ -107,14 +107,9 @@ public class ImageFragment extends Fragment {
         // ());
         ImageView imageView = null;
         ImageLoader imageLoader = ((MyApplication)getApplicationContext()).getImageLoader();
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_launcher) //this is the image that will be displayed if download fails
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
 
 
-        imageLoader.displayImage(img.getUri(),photoView,options);
+        imageLoader.displayImage(img.getUri().toString(),photoView);
 /*
         Glide.with(getContext())
                 .load(img.getUri())
