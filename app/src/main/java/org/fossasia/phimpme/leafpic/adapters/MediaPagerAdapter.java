@@ -1,14 +1,13 @@
 package org.fossasia.phimpme.leafpic.adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.leafpic.data.Media;
-import org.fossasia.phimpme.leafpic.fragments.ImageFragment;
 
 import java.util.ArrayList;
 
@@ -16,41 +15,41 @@ import java.util.ArrayList;
  * Created by dnld on 18/02/16.
  */
 
-public class MediaPagerAdapter extends FragmentStatePagerAdapter {
+public class MediaPagerAdapter extends PagerAdapter {
 
     private ArrayList<Media> media;
-    private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+    private Context context;
 
-    public MediaPagerAdapter(FragmentManager fm, ArrayList<Media> media) {
-        super(fm);
+
+    public MediaPagerAdapter(ArrayList<Media> media, Context context) {
         this.media = media;
+        this.context =context;
     }
 
 
-    @Override public Fragment getItem(int pos) {
-        Media media = this.media.get(pos);
-       return ImageFragment.newInstance(media);
-    }
+
 
     @Override public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = (Fragment) super.instantiateItem(container, position);
-        registeredFragments.put(position, fragment);
-        return fragment;
+        LayoutInflater layoutInflater = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View imageLayout =  layoutInflater.inflate(R.layout.item_pager_image, null);
+/*        ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image_view);
+        imageView.setImageURI(media.get(position).getUri());*/
+        container.addView(imageLayout, 0);
+        return imageLayout;
+
     }
+
 
     @Override public void destroyItem(ViewGroup container, int position, Object object) {
-        registeredFragments.remove(position);
         super.destroyItem(container, position, object);
+        container.removeView((View) object);
     }
 
-    public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return false;
     }
 
-    public void swapDataSet(ArrayList<Media> media) {
-        this.media = media;
-        notifyDataSetChanged();
-    }
 
     @Override public int getItemPosition(Object object) {
         return PagerAdapter.POSITION_NONE;

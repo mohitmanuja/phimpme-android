@@ -215,7 +215,7 @@ public class SingleMediaActivity extends SharedMediaActivity {
 
 
         if (!allPhotoMode) {
-            adapter = new MediaPagerAdapter(getSupportFragmentManager(), getAlbum().getMedia());
+            adapter = new MediaPagerAdapter(getAlbum().getMedia(),this);
 
             getSupportActionBar().setTitle((getAlbum().getCurrentMediaIndex() + 1) + " " + getString(R.string.of) + " " + getAlbum().getMedia().size());
             mViewPager.setAdapter(adapter);
@@ -241,7 +241,7 @@ public class SingleMediaActivity extends SharedMediaActivity {
                 }
             });
         } else {
-            adapter = new MediaPagerAdapter(getSupportFragmentManager(), LFMainActivity.listAll);
+            adapter = new MediaPagerAdapter(LFMainActivity.listAll,this);
             getSupportActionBar().setTitle(all_photo_pos + 1 + " " + getString(R.string.of) + " " + size_all);
             current_image_pos = all_photo_pos;
             mViewPager.setAdapter(adapter);
